@@ -19,26 +19,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Setup Node
-      uses: actions/setup-node@v1
-      with:
-          node-version: '10.x'
-
-    - name: Cache multiple paths
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/cache
-          !~/cache/exclude
-          **/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-
-    - name: Install Dependencies
-      run: ./scripts/update-dependencies
-
-    - name: Build Static
-      run: ./scripts/build-static -s
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
