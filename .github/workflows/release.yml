@@ -18,7 +18,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - run: mikdir dist
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -32,3 +31,13 @@ jobs:
             https://github.com/${{ github.repository }}/blob/release/CHANGELOG.md
           ) for changes in all releases.*
           ${{ steps.changelog.outputs.changelog }}
+          
+    - name: upload darwin artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: server
+        asset_name: azblogfilter.darwin-amd64.tar.gz
+        asset_content_type: application/gzip
