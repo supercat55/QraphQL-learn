@@ -22,6 +22,19 @@ jobs:
       with:
         files: server
         dest: result.zip
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.release.outputs.version }}
+        release_name: v${{ steps.release.outputs.version }}
+        body: |
+          *See the the [changelog](
+            https://github.com/${{ github.repository }}/blob/release/CHANGELOG.md
+          ) for changes in all releases.*
+          ${{ steps.changelog.outputs.changelog }}
     - name: upload darwin artifact
       uses: actions/upload-release-asset@v1
       env:
