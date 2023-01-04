@@ -31,13 +31,16 @@ jobs:
             https://github.com/${{ github.repository }}/blob/release/CHANGELOG.md
           ) for changes in all releases.*
           ${{ steps.changelog.outputs.changelog }}
-          
+    - uses: vimtor/action-zip@v1
+      with:
+        files: server
+        dest: result.zip
     - name: upload darwin artifact
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: server
+        asset_path: ./result.zip
         asset_name: azblogfilter.darwin-amd64.tar.gz
         asset_content_type: application/gzip
