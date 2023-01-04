@@ -18,19 +18,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ github.run_number }}
-        release_name: release V${{ github.run_number }}
-        body: |
-          *See the the [changelog](
-            https://github.com/${{ github.repository }}/blob/release/CHANGELOG.md
-          ) for changes in all releases.*
-          ${{ steps.changelog.outputs.changelog }}
     - uses: vimtor/action-zip@v1
       with:
         files: server
@@ -44,3 +31,12 @@ jobs:
         asset_path: ./result.zip
         asset_name: azblogfilter.darwin-amd64.tar.gz
         asset_content_type: application/gzip
+    - name: upload windows artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./result.zip
+        asset_name: azblogfilter.windows-amd64.zip
+        asset_content_type: application/zip
